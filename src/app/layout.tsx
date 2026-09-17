@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Sidebar from "@/components/sidebar";
 import Header from "@/components/header";
+import MobileNav from "@/components/mobile-nav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,13 +32,14 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex">
+      <body className="min-h-full flex overflow-hidden">
         <ThemeProvider>
           <Sidebar />
-          <div className="flex-1 ml-64 flex flex-col min-h-screen">
+          <div className="flex-1 ml-0 lg:ml-64 flex flex-col h-screen overflow-hidden">
             <Header />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 overflow-hidden pb-16 lg:pb-0">{children}</main>
           </div>
+          <MobileNav />
         </ThemeProvider>
       </body>
     </html>

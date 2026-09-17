@@ -69,14 +69,23 @@ export default function MapPage() {
   const [mapReady, setMapReady] = useState(false);
 
   useEffect(() => {
+    // Fix Leaflet default marker icons in Next.js
+    import("leaflet").then((L) => {
+      delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl: "/marker-icon-2x.png",
+        iconUrl: "/marker-icon.png",
+        shadowUrl: "/marker-shadow.png",
+      });
+    });
     setMapReady(true);
   }, []);
 
   return (
-    <div className="flex h-[calc(100vh-4rem)]">
+    <div className="flex h-[calc(100vh-4rem)] min-w-0">
       {/* Map Area */}
-      <div className="flex-1 p-4">
-        <div className="h-full rounded-xl overflow-hidden border border-card-border relative">
+      <div className="flex-1 min-w-0 p-4">
+        <div className="h-full rounded-xl overflow-hidden border border-card-border relative scale-in">
           {mapReady && (
             <MapContainer
               center={[30.0, -85.0]}
@@ -113,17 +122,17 @@ export default function MapPage() {
           )}
 
           {/* Map Controls */}
-          <div className="absolute right-4 top-4 flex flex-col gap-2 z-[1000]">
-            <button className="w-10 h-10 bg-card-bg border border-card-border rounded-lg flex items-center justify-center hover:bg-input-bg transition-colors shadow-sm">
+          <div className="absolute right-3 top-3 flex flex-col gap-1.5 z-[1000]">
+            <button className="pressable w-9 h-9 material-header rounded-lg flex items-center justify-center hover:bg-input-bg shadow-sm">
               <ZoomIn className="w-4 h-4 text-foreground" />
             </button>
-            <button className="w-10 h-10 bg-card-bg border border-card-border rounded-lg flex items-center justify-center hover:bg-input-bg transition-colors shadow-sm">
+            <button className="pressable w-9 h-9 material-header rounded-lg flex items-center justify-center hover:bg-input-bg shadow-sm">
               <ZoomOut className="w-4 h-4 text-foreground" />
             </button>
-            <button className="w-10 h-10 bg-card-bg border border-card-border rounded-lg flex items-center justify-center hover:bg-input-bg transition-colors shadow-sm">
+            <button className="pressable w-9 h-9 material-header rounded-lg flex items-center justify-center hover:bg-input-bg shadow-sm">
               <Layers className="w-4 h-4 text-foreground" />
             </button>
-            <button className="w-10 h-10 bg-card-bg border border-card-border rounded-lg flex items-center justify-center hover:bg-input-bg transition-colors shadow-sm">
+            <button className="pressable w-9 h-9 material-header rounded-lg flex items-center justify-center hover:bg-input-bg shadow-sm">
               <Navigation className="w-4 h-4 text-foreground" />
             </button>
           </div>
@@ -131,27 +140,27 @@ export default function MapPage() {
       </div>
 
       {/* Info Panel */}
-      <div className="w-96 border-l border-card-border bg-card-bg p-6 overflow-y-auto">
-        <h2 className="text-lg font-bold text-foreground mb-4">Satellite Info</h2>
+      <div className="w-72 lg:w-80 max-w-[45vw] material-sidebar p-4 lg:p-6 overflow-y-auto rubber-band shrink-0">
+        <h2 className="heading-section text-foreground mb-4">Satellite Info</h2>
 
-        <div className="space-y-4">
+        <div className="space-y-4 stagger-in">
           {satelliteData.map((sat) => (
             <div
               key={sat.id}
               onClick={() => setSelectedSat(sat)}
-              className={`p-4 rounded-xl border cursor-pointer transition-all ${
+              className={`card-hover pressable-subtle p-4 rounded-xl border cursor-pointer ${
                 selectedSat.id === sat.id
                   ? "border-blue-500 bg-blue-500/10"
                   : "border-card-border hover:border-blue-300"
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold text-foreground text-sm">{sat.name}</h3>
-                <span className="px-2 py-0.5 bg-green-500/20 text-green-600 dark:text-green-400 text-xs rounded-full">
+                <h3 className="heading-card text-foreground">{sat.name}</h3>
+                <span className="px-2 py-0.5 bg-green-500/20 text-green-600 dark:text-green-400 label-text rounded-full">
                   {sat.status}
                 </span>
               </div>
-              <div className="space-y-1 text-xs text-muted">
+              <div className="space-y-1 label-text text-muted">
                 <div className="flex justify-between">
                   <span>Altitude</span>
                   <span className="text-foreground">{sat.altitude}</span>
@@ -174,9 +183,9 @@ export default function MapPage() {
         <div className="mt-6 p-4 bg-input-bg rounded-xl">
           <div className="flex items-center gap-2 mb-2">
             <Info className="w-4 h-4 text-muted" />
-            <span className="text-sm font-medium text-foreground">Live Tracking</span>
+            <span className="body-text font-medium text-foreground">Live Tracking</span>
           </div>
-          <p className="text-xs text-muted">
+          <p className="label-text text-muted">
             Satellite positions update every 5 seconds. Data sourced from TLE orbital elements.
           </p>
         </div>

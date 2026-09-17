@@ -115,16 +115,16 @@ export default function HistoryPage() {
   });
 
   return (
-    <div className="p-6 h-[calc(100vh-4rem)] overflow-y-auto">
+    <div className="p-6 h-[calc(100vh-4rem)] overflow-y-auto rubber-band">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">History</h1>
-          <p className="text-sm text-muted mt-1">
+          <h1 className="heading-section text-foreground">History</h1>
+          <p className="body-text text-muted mt-1">
             Your recent activity and sessions
           </p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors text-sm">
+        <button className="pressable flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 body-text">
           <Trash2 className="w-4 h-4" />
           Clear History
         </button>
@@ -139,7 +139,7 @@ export default function HistoryPage() {
             placeholder="Search history..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent text-sm text-foreground placeholder:text-muted outline-none flex-1"
+            className="bg-transparent body-text text-foreground placeholder:text-muted outline-none flex-1"
           />
         </div>
         <div className="flex gap-2">
@@ -147,11 +147,12 @@ export default function HistoryPage() {
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-4 py-2 rounded-lg text-sm capitalize transition-all ${
+              className={`pressable-subtle px-4 py-2 rounded-lg body-text capitalize ${
                 filter === f
                   ? "bg-blue-600 text-white"
                   : "bg-input-bg text-muted hover:bg-background"
               }`}
+              style={{ transition: "background-color var(--duration-normal) var(--ease-out), color var(--duration-normal) var(--ease-out)" }}
             >
               {f}
             </button>
@@ -163,7 +164,7 @@ export default function HistoryPage() {
       <div className="relative">
         <div className="absolute left-6 top-0 bottom-0 w-px bg-card-border" />
 
-        <div className="space-y-4">
+        <div className="space-y-4 stagger-in">
           {filtered.map((item) => {
             const Icon = item.icon;
             return (
@@ -176,15 +177,15 @@ export default function HistoryPage() {
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 bg-card-bg border border-card-border rounded-xl p-4 hover:shadow-md transition-shadow">
+                <div className="card-hover pressable-subtle flex-1 bg-card-bg border border-card-border rounded-xl p-4">
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-semibold text-foreground">{item.title}</h3>
-                    <button className="p-1 hover:bg-input-bg rounded transition-colors">
+                    <h3 className="heading-card text-foreground">{item.title}</h3>
+                    <button className="pressable-subtle p-1 hover:bg-input-bg rounded">
                       <ArrowUpRight className="w-4 h-4 text-muted" />
                     </button>
                   </div>
-                  <p className="text-sm text-muted mb-2">{item.description}</p>
-                  <div className="flex items-center gap-4 text-xs text-muted">
+                  <p className="body-text text-muted mb-2">{item.description}</p>
+                  <div className="flex items-center gap-4 label-text text-muted">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
                       {item.timestamp}
@@ -202,9 +203,9 @@ export default function HistoryPage() {
       </div>
 
       {filtered.length === 0 && (
-        <div className="text-center py-12">
+        <div className="text-center py-12 fade-in">
           <Clock className="w-12 h-12 text-muted mx-auto mb-4" />
-          <p className="text-muted">No history found matching your search.</p>
+          <p className="body-text text-muted">No history found matching your search.</p>
         </div>
       )}
     </div>
