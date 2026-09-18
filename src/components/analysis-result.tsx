@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   ChevronDown,
   ChevronUp,
@@ -8,10 +8,12 @@ import {
   AlertCircle,
   Brain,
   MapPin,
+  Maximize2,
 } from "lucide-react";
 import type { AnalysisResult as AnalysisResultType } from "@/lib/mock-data";
 import BeforeAfter from "./before-after";
 import ExecutionSummary from "./execution-summary";
+import Lightbox from "./lightbox";
 
 function ConfidenceBadge({ confidence }: { confidence: number }) {
   const pct = Math.round(confidence * 100);
@@ -55,6 +57,17 @@ function SpecialistBadge({ specialist }: { specialist: string }) {
 
 export default function AnalysisResult({ result }: { result: AnalysisResultType }) {
   const [showDetails, setShowDetails] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const handleEvidenceClick = useCallback((index: number) => {
+    setLightboxIndex(index);
+  }, []);
+
+  const lightboxImages = result.evidence.map((e) => ({
+    src: e.tileUrl,
+    alt: e.label,
+    label: `${result.specialist} analysis`,
+  }));
 
   return (
     <div className="space-y-3 min-w-[260px] max-w-[320px]">
@@ -93,7 +106,8 @@ export default function AnalysisResult({ result }: { result: AnalysisResultType 
             {result.evidence.map((e, i) => (
               <div
                 key={i}
-                className="flex-1 h-20 rounded-lg border border-card-border overflow-hidden relative bg-gray-200 dark:bg-gray-800"
+                className="flex-1 h-20 rounded-lg border border-card-border overflow-hidden relative bg-gray-200 dark:bg-gray-800 cursor-pointer group"
+                onClick={() => handleEvidenceClick(i)}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -106,6 +120,11 @@ export default function AnalysisResult({ result }: { result: AnalysisResultType 
                     img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect fill='%23374151' width='80' height='80'/%3E%3Ctext x='50%25' y='50%25' fill='%239ca3af' text-anchor='middle' dy='.3em' font-size='10'%3ETile unavailable%3C/text%3E%3C/svg%3E";
                   }}
                 />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-black/60 rounded">
+                    <Maximize2 className="w-3 h-3 text-white" />
+                  </div>
+                </div>
                 <div className="absolute inset-0 flex items-end p-1.5 bg-gradient-to-t from-black/50 to-transparent">
                   <span className="label-text text-[10px] text-white px-1.5 py-0.5 rounded">
                     {e.label}
@@ -152,6 +171,14 @@ export default function AnalysisResult({ result }: { result: AnalysisResultType 
             />
           </div>
         </div>
+      )}
+
+      {lightboxIndex !== null && lightboxImages.length > 0 && (
+        <Lightbox
+          images={lightboxImages}
+          initialIndex={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+        />
       )}
     </div>
   );

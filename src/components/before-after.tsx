@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import { GripVertical, CheckCircle2 } from "lucide-react";
+import { GripVertical, CheckCircle2, Maximize2 } from "lucide-react";
+import Lightbox from "./lightbox";
 
 interface BeforeAfterProps {
   beforeLabel: string;
@@ -20,6 +21,7 @@ export default function BeforeAfter({
 }: BeforeAfterProps) {
   const [split, setSplit] = useState(50);
   const [containerWidth, setContainerWidth] = useState(0);
+  const [lightboxSide, setLightboxSide] = useState<"before" | "after" | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
 
@@ -76,6 +78,15 @@ export default function BeforeAfter({
           <div className="absolute bottom-2 right-2 label-text text-[10px] text-white bg-black/50 px-2 py-0.5 rounded">
             {afterLabel}
           </div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightboxSide("after");
+            }}
+            className="absolute top-2 right-2 p-1.5 bg-black/50 hover:bg-black/70 rounded-lg transition-colors opacity-0 hover:opacity-100"
+          >
+            <Maximize2 className="w-3 h-3 text-white" />
+          </button>
         </div>
 
         {/* Before (clipped) */}
@@ -98,6 +109,15 @@ export default function BeforeAfter({
             <div className="absolute bottom-2 left-2 label-text text-[10px] text-white bg-black/50 px-2 py-0.5 rounded">
               {beforeLabel}
             </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setLightboxSide("before");
+              }}
+              className="absolute top-2 left-2 p-1.5 bg-black/50 hover:bg-black/70 rounded-lg transition-colors opacity-0 hover:opacity-100"
+            >
+              <Maximize2 className="w-3 h-3 text-white" />
+            </button>
           </div>
         </div>
 
@@ -124,6 +144,17 @@ export default function BeforeAfter({
             </div>
           ))}
         </div>
+      )}
+
+      {lightboxSide && (
+        <Lightbox
+          images={[
+            { src: beforeTileUrl, alt: beforeLabel, label: "Before" },
+            { src: afterTileUrl, alt: afterLabel, label: "After" },
+          ]}
+          initialIndex={lightboxSide === "before" ? 0 : 1}
+          onClose={() => setLightboxSide(null)}
+        />
       )}
     </div>
   );

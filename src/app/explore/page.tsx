@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { Search, Filter, MapPin, Satellite, Globe, Radar, Star, ArrowRight } from "lucide-react";
+import { useState, useCallback } from "react";
+import { Search, Filter, MapPin, Satellite, Globe, Radar, Star, ArrowRight, Maximize2 } from "lucide-react";
 import dynamic from "next/dynamic";
+import Lightbox from "@/components/lightbox";
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -91,12 +92,23 @@ const exploreItems = [
 export default function ExplorePage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const filteredItems = exploreItems.filter((item) => {
     const matchesCategory = activeCategory === "all" || item.category === activeCategory;
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  const handleImageClick = useCallback((index: number) => {
+    setLightboxIndex(index);
+  }, []);
+
+  const lightboxImages = filteredItems.map((item) => ({
+    src: item.image,
+    alt: item.name,
+    label: item.description,
+  }));
 
   return (
     <div className="flex h-[calc(100vh-4rem)]">
@@ -158,15 +170,22 @@ export default function ExplorePage() {
 
         {/* Results */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {filteredItems.map((item) => (
+          {filteredItems.map((item, idx) => (
             <div
               key={item.id}
-              className="bg-background border border-card-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+              className="bg-background border border-card-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group"
             >
               <div
-                className="h-40 bg-cover bg-center"
+                className="relative h-40 bg-cover bg-center cursor-pointer"
                 style={{ backgroundImage: `url(${item.image})` }}
-              />
+                onClick={() => handleImageClick(idx)}
+              >
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity p-2 bg-black/60 rounded-lg">
+                    <Maximize2 className="w-5 h-5 text-white" />
+                  </div>
+                </div>
+              </div>
               <div className="p-4">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-bold text-foreground">{item.name}</h3>
@@ -181,7 +200,13 @@ export default function ExplorePage() {
                     <MapPin className="w-3 h-3" />
                     {item.lat.toFixed(2)}, {item.lng.toFixed(2)}
                   </div>
-                  <button className="flex items-center gap-1 text-sm text-blue-500 hover:text-blue-600">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleImageClick(idx);
+                    }}
+                    className="flex items-center gap-1 text-sm text-blue-500 hover:text-blue-600"
+                  >
                     View <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -190,6 +215,14 @@ export default function ExplorePage() {
           ))}
         </div>
       </div>
+
+      {lightboxIndex !== null && (
+        <Lightbox
+          images={lightboxImages}
+          initialIndex={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+        />
+      )}
     </div>
   );
 }
