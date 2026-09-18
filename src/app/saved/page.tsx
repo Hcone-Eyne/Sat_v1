@@ -85,19 +85,19 @@ export default function SavedPage() {
   );
 
   return (
-    <div className="p-6 h-[calc(100vh-4rem)] overflow-y-auto rubber-band">
+    <div className="p-6 h-[calc(100vh-4rem)] overflow-y-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="heading-section text-foreground">Saved Places</h1>
-          <p className="body-text text-muted mt-1">
+          <h1 className="text-2xl font-bold text-foreground">Saved Places</h1>
+          <p className="text-sm text-muted mt-1">
             {savedPlaces.length} places saved
           </p>
         </div>
         <div className="flex items-center gap-3">
           <button
             onClick={() => setViewMode("grid")}
-            className={`pressable-subtle p-2 rounded-lg ${
+            className={`p-2 rounded-lg ${
               viewMode === "grid"
                 ? "bg-blue-600 text-white"
                 : "bg-input-bg text-muted"
@@ -107,7 +107,7 @@ export default function SavedPage() {
           </button>
           <button
             onClick={() => setViewMode("list")}
-            className={`pressable-subtle p-2 rounded-lg ${
+            className={`p-2 rounded-lg ${
               viewMode === "list"
                 ? "bg-blue-600 text-white"
                 : "bg-input-bg text-muted"
@@ -127,40 +127,40 @@ export default function SavedPage() {
             placeholder="Search saved places..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent body-text text-foreground placeholder:text-muted outline-none flex-1"
+            className="bg-transparent text-sm text-foreground placeholder:text-muted outline-none flex-1"
           />
         </div>
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="pressable-subtle px-4 py-2 bg-input-bg rounded-lg body-text text-foreground border-none outline-none"
+          className="px-4 py-2 bg-input-bg rounded-lg text-sm text-foreground border-none outline-none"
         >
           <option value="date">Sort by Date</option>
           <option value="name">Sort by Name</option>
           <option value="rating">Sort by Rating</option>
         </select>
-        <button className="pressable-subtle p-2 bg-input-bg rounded-lg hover:bg-background">
+        <button className="p-2 bg-input-bg rounded-lg hover:bg-background transition-colors">
           <Filter className="w-4 h-4 text-muted" />
         </button>
       </div>
 
       {/* Grid View */}
       {viewMode === "grid" ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-in">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((place) => (
             <div
               key={place.id}
-              className="card-hover pressable-subtle bg-card-bg border border-card-border rounded-xl overflow-hidden"
+              className="bg-card-bg border border-card-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
             >
               <div
                 className="h-48 bg-cover bg-center relative"
                 style={{ backgroundImage: `url(${place.image})` }}
               >
                 <div className="absolute top-3 right-3 flex gap-2">
-                  <button className="pressable w-8 h-8 bg-black/50 backdrop-blur-sm rounded-lg flex items-center justify-center text-white hover:bg-black/70">
+                  <button className="w-8 h-8 bg-black/50 backdrop-blur-sm rounded-lg flex items-center justify-center text-white hover:bg-black/70">
                     <ExternalLink className="w-4 h-4" />
                   </button>
-                  <button className="pressable w-8 h-8 bg-red-500/80 backdrop-blur-sm rounded-lg flex items-center justify-center text-white hover:bg-red-600">
+                  <button className="w-8 h-8 bg-red-500/80 backdrop-blur-sm rounded-lg flex items-center justify-center text-white hover:bg-red-600">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
@@ -168,7 +168,7 @@ export default function SavedPage() {
                   {place.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-2 py-1 bg-black/50 backdrop-blur-sm text-white label-text rounded-full"
+                      className="px-2 py-1 bg-black/50 backdrop-blur-sm text-white text-xs rounded-full"
                     >
                       {tag}
                     </span>
@@ -176,8 +176,8 @@ export default function SavedPage() {
                 </div>
               </div>
               <div className="p-4">
-                <h3 className="heading-card text-foreground mb-1">{place.name}</h3>
-                <p className="body-text text-muted mb-2">{place.location}</p>
+                <h3 className="font-bold text-foreground mb-1">{place.name}</h3>
+                <p className="text-sm text-muted mb-2">{place.location}</p>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1">
                     {Array.from({ length: place.rating }).map((_, i) => (
@@ -187,7 +187,7 @@ export default function SavedPage() {
                       />
                     ))}
                   </div>
-                  <div className="flex items-center gap-1 label-text text-muted">
+                  <div className="flex items-center gap-1 text-xs text-muted">
                     <MapPin className="w-3 h-3" />
                     {place.coordinates}
                   </div>
@@ -198,19 +198,19 @@ export default function SavedPage() {
         </div>
       ) : (
         /* List View */
-        <div className="space-y-3 stagger-in">
+        <div className="space-y-3">
           {filtered.map((place) => (
             <div
               key={place.id}
-              className="card-hover pressable-subtle bg-card-bg border border-card-border rounded-xl p-4 flex items-center gap-4"
+              className="bg-card-bg border border-card-border rounded-xl p-4 flex items-center gap-4 hover:shadow-md transition-shadow"
             >
               <div
                 className="w-20 h-20 rounded-lg bg-cover bg-center flex-shrink-0"
                 style={{ backgroundImage: `url(${place.image})` }}
               />
               <div className="flex-1">
-                <h3 className="heading-card text-foreground">{place.name}</h3>
-                <p className="body-text text-muted">{place.location}</p>
+                <h3 className="font-bold text-foreground">{place.name}</h3>
+                <p className="text-sm text-muted">{place.location}</p>
                 <div className="flex items-center gap-3 mt-1">
                   <div className="flex items-center gap-1">
                     {Array.from({ length: place.rating }).map((_, i) => (
@@ -220,14 +220,14 @@ export default function SavedPage() {
                       />
                     ))}
                   </div>
-                  <span className="label-text text-muted">{place.savedDate}</span>
+                  <span className="text-xs text-muted">{place.savedDate}</span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <button className="pressable-subtle p-2 hover:bg-input-bg rounded-lg">
+                <button className="p-2 hover:bg-input-bg rounded-lg transition-colors">
                   <ExternalLink className="w-4 h-4 text-muted" />
                 </button>
-                <button className="pressable-subtle p-2 hover:bg-red-500/10 rounded-lg">
+                <button className="p-2 hover:bg-red-500/10 rounded-lg transition-colors">
                   <Trash2 className="w-4 h-4 text-red-500" />
                 </button>
               </div>

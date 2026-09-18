@@ -28,41 +28,41 @@ const categories = [
 const exploreItems = [
   {
     id: 1,
-    name: "ISS",
+    name: "Urban Change Detection",
     category: "stations",
-    description: "International Space Station orbiting Earth at 408km altitude.",
-    image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=400&h=300&fit=crop",
+    description: "AI-powered change detection over city grids with cyan/green overlay highlights identifying infrastructure shifts.",
+    image: "/screenshots/change-detection.png",
     rating: 4.9,
     lat: 28.5721,
     lng: -80.6508,
   },
   {
     id: 2,
-    name: "Hubble Telescope",
-    category: "telescopes",
-    description: "Space telescope in low Earth orbit, observing the universe since 1990.",
-    image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400&h=300&fit=crop",
+    name: "Flood Inundation SAR",
+    category: "weather",
+    description: "Synthetic Aperture Radar combined with optical sensing to map flood water across river deltas and urban channels.",
+    image: "/screenshots/flood-sar.png",
     rating: 4.8,
     lat: 29.5,
     lng: -85.0,
   },
   {
     id: 3,
-    name: "NOAA-20",
-    category: "weather",
-    description: "Joint Polar Satellite System for weather forecasting.",
-    image: "https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=400&h=300&fit=crop",
-    rating: 4.5,
+    name: "Airport Infrastructure",
+    category: "stations",
+    description: "High-resolution overhead imagery of international airport runways, terminals, and taxiway networks.",
+    image: "/screenshots/airport.png",
+    rating: 4.6,
     lat: 35.0,
     lng: -75.0,
   },
   {
     id: 4,
-    name: "Starlink Cluster",
+    name: "Vegetation Canopy Analysis",
     category: "comm",
-    description: "SpaceX satellite constellation providing global internet coverage.",
-    image: "https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?w=400&h=300&fit=crop",
-    rating: 4.3,
+    description: "Remote sensing forestry map showing lush green riverbank canopy and dense vegetation cover along winding waterways.",
+    image: "/screenshots/vegetation.png",
+    rating: 4.7,
     lat: 32.1,
     lng: -90.5,
   },
@@ -99,9 +99,9 @@ export default function ExplorePage() {
   });
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] min-w-0">
+    <div className="flex h-[calc(100vh-4rem)]">
       {/* Map */}
-      <div className="flex-1 min-w-0 p-4">
+      <div className="flex-1 p-4">
         <div className="h-full rounded-xl overflow-hidden border border-card-border">
           <MapContainer
             center={[30, -40]}
@@ -120,9 +120,9 @@ export default function ExplorePage() {
       </div>
 
       {/* Explore Panel */}
-      <div className="w-72 lg:w-80 max-w-[45vw] material-sidebar flex flex-col shrink-0">
+      <div className="w-[420px] border-l border-card-border bg-card-bg flex flex-col">
         {/* Search */}
-        <div className="p-4" style={{ borderBottom: "1px solid var(--material-border)" }}>
+        <div className="p-4 border-b border-card-border">
           <div className="flex items-center gap-2 bg-input-bg rounded-lg px-4 py-2">
             <Search className="w-4 h-4 text-muted" />
             <input
@@ -130,26 +130,25 @@ export default function ExplorePage() {
               placeholder="Search satellites..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent body-text text-foreground placeholder:text-muted outline-none flex-1"
+              className="bg-transparent text-sm text-foreground placeholder:text-muted outline-none flex-1"
             />
-            <button className="pressable-subtle p-1 hover:bg-background rounded">
+            <button className="p-1 hover:bg-background rounded">
               <Filter className="w-4 h-4 text-muted" />
             </button>
           </div>
         </div>
 
         {/* Categories */}
-        <div className="flex gap-2 p-4 overflow-x-auto rubber-band">
+        <div className="flex gap-2 p-4 overflow-x-auto">
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
-              className={`pressable-subtle flex items-center gap-2 px-4 py-2 rounded-full body-text whitespace-nowrap ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all ${
                 activeCategory === cat.id
                   ? "bg-blue-600 text-white"
                   : "bg-input-bg text-muted hover:bg-background"
               }`}
-              style={{ transition: "background-color var(--duration-normal) var(--ease-out), color var(--duration-normal) var(--ease-out)" }}
             >
               <cat.icon className="w-4 h-4" />
               {cat.label}
@@ -158,11 +157,11 @@ export default function ExplorePage() {
         </div>
 
         {/* Results */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 stagger-in rubber-band">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {filteredItems.map((item) => (
             <div
               key={item.id}
-              className="card-hover pressable-subtle bg-background border border-card-border rounded-xl overflow-hidden cursor-pointer"
+              className="bg-background border border-card-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
             >
               <div
                 className="h-40 bg-cover bg-center"
@@ -170,19 +169,19 @@ export default function ExplorePage() {
               />
               <div className="p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="heading-card text-foreground">{item.name}</h3>
+                  <h3 className="font-bold text-foreground">{item.name}</h3>
                   <div className="flex items-center gap-1">
                     <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                    <span className="body-text text-foreground">{item.rating}</span>
+                    <span className="text-sm text-foreground">{item.rating}</span>
                   </div>
                 </div>
-                <p className="body-text text-muted mb-3">{item.description}</p>
+                <p className="text-sm text-muted mb-3">{item.description}</p>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1 label-text text-muted">
+                  <div className="flex items-center gap-1 text-xs text-muted">
                     <MapPin className="w-3 h-3" />
                     {item.lat.toFixed(2)}, {item.lng.toFixed(2)}
                   </div>
-                  <button className="pressable-subtle flex items-center gap-1 body-text text-blue-500 hover:text-blue-600">
+                  <button className="flex items-center gap-1 text-sm text-blue-500 hover:text-blue-600">
                     View <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
