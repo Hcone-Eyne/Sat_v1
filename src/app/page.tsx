@@ -85,7 +85,8 @@ export default function MapPage() {
 
   const markerIcon = useMemo(() => {
     if (typeof window === "undefined") return undefined;
-    const L = require("leaflet");
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-explicit-any
+    const L = require("leaflet") as any;
     return new L.Icon({
       iconUrl: "/marker-icon.png",
       iconRetinaUrl: "/marker-icon-2x.png",
@@ -120,7 +121,7 @@ export default function MapPage() {
                   <div className="text-sm">
                     <strong>Selected Location</strong>
                     <br />
-                    {selectedLocation.lat.toFixed(4)}°N, {Math.abs(selectedLocation.lng).toFixed(4)}°W
+                    {selectedLocation.lat.toFixed(4)}°{selectedLocation.lat >= 0 ? "N" : "S"}, {Math.abs(selectedLocation.lng).toFixed(4)}°{selectedLocation.lng >= 0 ? "E" : "W"}
                   </div>
                 </Popup>
               </Marker>
@@ -153,7 +154,7 @@ export default function MapPage() {
             <div className="absolute left-4 top-4 z-[1000] material-header rounded-lg px-3 py-2 shadow-sm">
               <p className="label-text text-foreground font-medium">Location Selected</p>
               <p className="text-[10px] text-blue-500">
-                {selectedLocation.lat.toFixed(4)}°N, {Math.abs(selectedLocation.lng).toFixed(4)}°W
+                {selectedLocation.lat.toFixed(4)}°{selectedLocation.lat >= 0 ? "N" : "S"}, {Math.abs(selectedLocation.lng).toFixed(4)}°{selectedLocation.lng >= 0 ? "E" : "W"}
               </p>
             </div>
           )}

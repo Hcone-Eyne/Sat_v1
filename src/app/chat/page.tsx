@@ -66,6 +66,7 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const nextId = useRef(2);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -75,12 +76,18 @@ export default function ChatPage() {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    return () => {
+      setIsTyping(false);
+    };
+  }, []);
+
   const handleSend = (text?: string) => {
     const query = text || input;
     if (!query.trim()) return;
 
     const userMessage: Message = {
-      id: messages.length + 1,
+      id: nextId.current++,
       role: "user",
       content: query,
       timestamp: new Date().toLocaleTimeString("en-US", {
@@ -96,7 +103,7 @@ export default function ChatPage() {
 
     setTimeout(() => {
       const aiMessage: Message = {
-        id: messages.length + 2,
+        id: nextId.current++,
         role: "assistant",
         content: getAIResponse(query),
         timestamp: new Date().toLocaleTimeString("en-US", {

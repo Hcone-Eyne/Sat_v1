@@ -80,9 +80,15 @@ export default function SavedPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("date");
 
-  const filtered = savedPlaces.filter((place) =>
-    place.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filtered = savedPlaces
+    .filter((place) =>
+      place.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortBy === "name") return a.name.localeCompare(b.name);
+      if (sortBy === "rating") return b.rating - a.rating;
+      return new Date(b.savedDate).getTime() - new Date(a.savedDate).getTime();
+    });
 
   return (
     <div className="p-6 h-[calc(100vh-4rem)] overflow-y-auto">

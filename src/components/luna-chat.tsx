@@ -48,6 +48,11 @@ export default function LunaChat({ selectedLocation }: LunaChatProps) {
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    return () => { isMounted.current = false; };
+  }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -72,7 +77,7 @@ export default function LunaChat({ selectedLocation }: LunaChatProps) {
           content: q,
         },
         {
-          id: `l-${Date.now()}`,
+          id: `l-${Date.now()}-err`,
           role: "luna",
           content: "Please click on the map first to select a location, then ask me about it.",
           response: { type: "error" },
@@ -100,9 +105,9 @@ export default function LunaChat({ selectedLocation }: LunaChatProps) {
         content: response.result?.summary || "I couldn't analyze that.",
         response,
       };
-      setMessages((prev) => [...prev, lunaMsg]);
+      if (isMounted.current) setMessages((prev) => [...prev, lunaMsg]);
     } catch {
-      setMessages((prev) => [
+      if (isMounted.current) setMessages((prev) => [
         ...prev,
         {
           id: `l-${Date.now()}`,
@@ -112,7 +117,7 @@ export default function LunaChat({ selectedLocation }: LunaChatProps) {
         },
       ]);
     } finally {
-      setLoading(false);
+      if (isMounted.current) setLoading(false);
       inputRef.current?.focus();
     }
   }, [input, loading, selectedLocation]);
@@ -144,7 +149,7 @@ export default function LunaChat({ selectedLocation }: LunaChatProps) {
         <div className="shrink-0 px-4 py-2 bg-blue-500/5 border-b border-card-border flex items-center gap-2">
           <MapPin className="w-3 h-3 text-blue-500" />
           <span className="label-text text-muted">
-            {selectedLocation.lat.toFixed(4)}°N, {Math.abs(selectedLocation.lng).toFixed(4)}°W
+            {Math.abs(selectedLocation.lat).toFixed(4)}°{selectedLocation.lat >= 0 ? "N" : "S"}, {Math.abs(selectedLocation.lng).toFixed(4)}°{selectedLocation.lng >= 0 ? "E" : "W"}
           </span>
         </div>
       )}

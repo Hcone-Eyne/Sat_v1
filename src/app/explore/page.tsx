@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Search, Filter, MapPin, Satellite, Globe, Radar, Star, ArrowRight, Maximize2 } from "lucide-react";
 import dynamic from "next/dynamic";
 import Lightbox from "@/components/lightbox";
@@ -93,6 +93,10 @@ export default function ExplorePage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    setLightboxIndex(null);
+  }, [activeCategory, searchQuery]);
 
   const filteredItems = exploreItems.filter((item) => {
     const matchesCategory = activeCategory === "all" || item.category === activeCategory;

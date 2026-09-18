@@ -36,8 +36,9 @@ export default function BeforeAfter({
     return () => ro.disconnect();
   }, []);
 
-  const onPointerDown = useCallback(() => {
+  const onPointerDown = useCallback((e: React.PointerEvent) => {
     dragging.current = true;
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
   }, []);
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
@@ -61,6 +62,16 @@ export default function BeforeAfter({
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerLeave={onPointerUp}
+        role="slider"
+        aria-label="Before and after comparison slider"
+        aria-valuenow={Math.round(split)}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowLeft") setSplit((s) => Math.max(5, s - 2));
+          if (e.key === "ArrowRight") setSplit((s) => Math.min(95, s + 2));
+        }}
       >
         {/* After (full width) */}
         <div className="absolute inset-0">

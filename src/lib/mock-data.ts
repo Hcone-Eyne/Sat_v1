@@ -53,9 +53,10 @@ export const STUDY_REGION = {
 };
 
 export function satTile(z: number, lat: number, lng: number): string {
+  const clampedLat = Math.max(-85, Math.min(85, lat));
   const x = Math.floor(((lng + 180) / 360) * Math.pow(2, z));
   const y = Math.floor(
-    ((1 - Math.log(Math.tan((lat * Math.PI) / 180) + 1 / Math.cos((lat * Math.PI) / 180)) / Math.PI) /
+    ((1 - Math.log(Math.tan((clampedLat * Math.PI) / 180) + 1 / Math.cos((clampedLat * Math.PI) / 180)) / Math.PI) /
       2) *
       Math.pow(2, z)
   );
@@ -158,14 +159,15 @@ export function detectLocation(lat: number, lng: number): LocationProfile {
       description: "Dense coniferous forest with river systems and mountain terrain",
     };
   }
+  const hash = Math.abs(Math.sin(lat * 12.9898 + lng * 78.233) * 43758.5453) % 1;
   return {
     name: `Area at ${lat.toFixed(3)}°, ${lng.toFixed(3)}°`,
     region: "Scanned Region",
     terrain: "agricultural",
-    hasWater: Math.random() > 0.6,
-    hasBuildings: Math.random() > 0.5,
-    hasVegetation: Math.random() > 0.3,
-    recentChange: Math.random() > 0.5,
+    hasWater: hash > 0.6,
+    hasBuildings: hash > 0.5,
+    hasVegetation: hash > 0.3,
+    recentChange: hash > 0.5,
     description: "Mixed terrain area with varied land cover detected by satellite sensors",
   };
 }

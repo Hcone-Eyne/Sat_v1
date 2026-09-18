@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useMap } from "react-leaflet";
 import {
   Layers,
   Building2,
@@ -349,9 +348,9 @@ export default function AnalysisLayers() {
             </span>
           )}
           {expanded ? (
-            <ChevronDown className="w-3 h-3 text-muted ml-auto" />
-          ) : (
             <ChevronUp className="w-3 h-3 text-muted ml-auto" />
+          ) : (
+            <ChevronDown className="w-3 h-3 text-muted ml-auto" />
           )}
         </button>
 

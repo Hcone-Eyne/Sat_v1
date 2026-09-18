@@ -16,7 +16,7 @@ import ExecutionSummary from "./execution-summary";
 import Lightbox from "./lightbox";
 
 function ConfidenceBadge({ confidence }: { confidence: number }) {
-  const pct = Math.round(confidence * 100);
+  const pct = Math.min(100, Math.round(confidence * 100));
   const color =
     pct >= 90
       ? "text-green-500 bg-green-500/10"
@@ -81,7 +81,7 @@ export default function AnalysisResult({ result }: { result: AnalysisResultType 
       {result.lat !== 0 && result.lng !== 0 && (
         <div className="flex items-center gap-1.5 text-[11px] text-muted">
           <MapPin className="w-3 h-3" />
-          {result.lat.toFixed(4)}°N, {Math.abs(result.lng).toFixed(4)}°W
+          {Math.abs(result.lat).toFixed(4)}°{result.lat >= 0 ? "N" : "S"}, {Math.abs(result.lng).toFixed(4)}°{result.lng >= 0 ? "E" : "W"}
         </div>
       )}
 
@@ -106,8 +106,12 @@ export default function AnalysisResult({ result }: { result: AnalysisResultType 
             {result.evidence.map((e, i) => (
               <div
                 key={i}
+                tabIndex={0}
+                role="button"
+                aria-label={`View ${e.label} full size`}
                 className="flex-1 h-20 rounded-lg border border-card-border overflow-hidden relative bg-gray-200 dark:bg-gray-800 cursor-pointer group"
                 onClick={() => handleEvidenceClick(i)}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleEvidenceClick(i); } }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img

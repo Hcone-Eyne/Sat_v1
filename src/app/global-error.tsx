@@ -7,12 +7,13 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  console.error("Global error:", error);
   return (
-    <html>
+    <html suppressHydrationWarning>
       <body>
         <div style={{ padding: "2rem", textAlign: "center", fontFamily: "system-ui" }}>
           <h2>Something went wrong</h2>
-          <p style={{ color: "#666", marginTop: "0.5rem" }}>{error.message}</p>
+          <p style={{ color: "#666", marginTop: "0.5rem" }}>An unexpected error occurred. Please try again.</p>
           <button
             onClick={reset}
             style={{

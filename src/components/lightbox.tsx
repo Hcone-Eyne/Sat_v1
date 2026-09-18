@@ -125,9 +125,14 @@ export default function Lightbox({ images, initialIndex = 0, onClose }: Lightbox
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose, handlePrev, handleNext, handleZoomIn, handleZoomOut, resetTransform]);
 
+  if (!images.length || !currentImage) return null;
+
   return (
     <div
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm"
+      role="dialog"
+      aria-label={`Image viewer: ${currentImage.alt}`}
+      aria-modal="true"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
