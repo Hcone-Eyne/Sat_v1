@@ -36,6 +36,10 @@ const MapControls = dynamic(
   () => import("@/components/map-controls"),
   { ssr: false }
 );
+const AnalysisLayers = dynamic(
+  () => import("@/components/analysis-layers"),
+  { ssr: false }
+);
 
 const satelliteData = [
   {
@@ -108,6 +112,7 @@ export default function MapPage() {
             />
             <MapClickHandler onLocationSelect={setSelectedLocation} />
             <MapControls />
+            <AnalysisLayers />
             <RegionHighlight />
             {selectedLocation && markerIcon && (
               <Marker position={[selectedLocation.lat, selectedLocation.lng]} icon={markerIcon}>
